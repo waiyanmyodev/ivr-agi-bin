@@ -36,7 +36,11 @@ $sql = "UPDATE schedule_phones SET status = 'answered' WHERE schedule_id = {$sch
 $agi->answer();
 
 $conn->query($sql);
-$agi->stream_file('ngo_ivr/mm/mm_greet', 22370);
+
+
+
+// intro
+$agi->stream_file('ngo_ivr/mm/mm_intro', 23195);
 
 $chosenLang = null;
 
@@ -61,41 +65,71 @@ for ($i = 1; $i <= 3; $i++) {
         for ($i = 1; $i <= 3; $i++) {
 
             // mm intro and ask child age,  child age range (1 for 0-3, 2 for > 3)
-            $agi->get_data('ngo_ivr/mm/mm_intro', 5000, 1);
-            $agi->stream_file('ngo_ivr/mm/mm_key_message', 193000);
+            $childAgeRange = $agi->get_data('ngo_ivr/mm/mm_intro_1', 21037, 1);
 
-            for ($i = 1; $i <= 3; $i++) {
+            if ($childAgeRange['result'] == 1) {
 
-                // quiz if press 1
-                $quizPress1Result = $agi->get_data('ngo_ivr/mm/mm_quiz', 21000, 1);
+                // key message if pressed 1
+                $agi->stream_file('ngo_ivr/mm/mm_key_message_pressed_1', 247441);
 
-                if ($quizPress1Result['result'] == 1) {
-                    // correct anaswer for press 2
-                    $agi->stream_file('ngo_ivr/mm/mm_quiz_correct', 15000);
-                    $q1_answer = 2;
-                    $conn->close();
-                    break;
-                } elseif ($quizPress1Result['result'] == 2) {
-                    // incorrect answer for press 1
-                    $agi->stream_file('ngo_ivr/mm/mm_quiz_incorrect', 16000);
-                    $q1_answer = 1;
-                    break;
-                } else {
-                    // play invalid input
-                    $agi->stream_file('pm-invalid-option', 4500);
+                for ($i = 1; $i <= 3; $i++) {
+
+                    // quiz if press 1
+                    $quizPress1Result = $agi->get_data('ngo_ivr/mm/mm_quiz_press_1_result', 18000, 1);
+
+                    if ($quizPress1Result['result'] == 1) {
+                        // correct anaswer for press 1
+                        $agi->stream_file('ngo_ivr/mm/mm_quiz_press_1_correct', 10984);
+                        $q1_answer = 1;
+
+                        $conn->close();
+                        break;
+                    } elseif ($quizPress1Result['result'] == 2) {
+                        // incorrect answer for press 1
+                        $agi->stream_file('ngo_ivr/mm/mm_quiz_press_1_incorrect', 12539);
+                        $q1_answer = 2;
+
+
+                        break;
+                    } else {
+                        // play invalid input
+                        $agi->stream_file('pm-invalid-option', 4500);
+                    }
                 }
+
+
+                break;
+            } elseif ($childAgeRange['result'] == 2) {
+
+                // key message if pressed 1
+                $agi->stream_file('ngo_ivr/mm/mm_key_message_pressed_2', 135999);
+
+                for ($i = 1; $i <= 3; $i++) {
+
+                    // quiz if press 2
+                    $quizPress1Result = $agi->get_data('ngo_ivr/mm/mm_quiz_press_2_result', 26351, 1);
+
+                    if ($quizPress1Result['result'] == 1) {
+                        // correct anaswer for press 1
+                        $agi->stream_file('ngo_ivr/mm/mm_quiz_press_2_correct', 10329);
+                        $q2_answer = 1;
+                        break;
+                    } elseif ($quizPress1Result['result'] == 2) {
+                        // incorrect answer for press 1
+                        $agi->stream_file('ngo_ivr/mm/mm_quiz_press_2_incorrect', 12908);
+                        $q2_answer = 2;
+                        break;
+                    } else {
+                        // play invalid input
+                        $agi->stream_file('pm-invalid-option', 4500);
+                    }
+                }
+
+                break;
+            } else {
+                // play invalid input
+                $agi->stream_file('pm-invalid-option', 4500);
             }
-
-
-            break;
-            // if ($childAgeRange['result'] == 1) {
-
-            //     // key message if pressed 1
-
-            // } else {
-            //     // play invalid input
-            //     $agi->stream_file('pm-invalid-option', 4500);
-            // }
         }
 
         if ($q1_answer != null) {
@@ -117,7 +151,7 @@ for ($i = 1; $i <= 3; $i++) {
 
 
         // outro
-        $agi->stream_file('ngo_ivr/mm/mm_outro', 16000);
+        $agi->stream_file('ngo_ivr/mm/mm_outtro', 15395);
 
         // break loop
         break;
@@ -125,42 +159,71 @@ for ($i = 1; $i <= 3; $i++) {
         for ($i = 1; $i <= 3; $i++) {
 
             // mm intro and ask child age,  child age range (1 for 0-3, 2 for > 3)
-            $agi->get_data('ngo_ivr/pok/poe_intro', 9000, 1);
-            $agi->stream_file('ngo_ivr/pok/poe_key_message', 252000);
+            $childAgeRange = $agi->get_data('ngo_ivr/pok/poe_intro', 36370, 1);
 
-            for ($i = 1; $i <= 3; $i++) {
+            if ($childAgeRange['result'] == 1) {
 
-                // quiz if press 1
-                $quizPress1Result = $agi->get_data('ngo_ivr/pok/poe_quiz', 27000, 1);
+                // key message if pressed 1
+                $agi->stream_file('ngo_ivr/pok/poe_key_message_pressed_1', 308175);
 
-                if ($quizPress1Result['result'] == 1) {
-                    // correct anaswer for press 2
-                    $agi->stream_file('ngo_ivr/pok/poe_correct_answer', 17000);
-                    $q1_answer = 2;
+                for ($i = 1; $i <= 3; $i++) {
 
-                    $conn->close();
-                    break;
-                } elseif ($quizPress1Result['result'] == 2) {
-                    // incorrect answer for press 1
-                    $agi->stream_file('ngo_ivr/pok/poe_incorrect_answer', 18000);
-                    $q1_answer = 1;
+                    // quiz if press 1
+                    $quizPress1Result = $agi->get_data('ngo_ivr/pok/poe_quiz_press_1_result', 28627, 1);
+
+                    if ($quizPress1Result['result'] == 1) {
+                        // correct anaswer for press 1
+                        $agi->stream_file('ngo_ivr/pok/poe_quiz_press_1_correct', 17084);
+                        $q1_answer = 1;
+
+                        $conn->close();
+                        break;
+                    } elseif ($quizPress1Result['result'] == 2) {
+                        // incorrect answer for press 1
+                        $agi->stream_file('ngo_ivr/pok/poe_quiz_press_1_incorrect', 21255);
+                        $q1_answer = 2;
 
 
-                    break;
-                } else {
-                    // play invalid input
-                    $agi->stream_file('pm-invalid-option', 4500);
+                        break;
+                    } else {
+                        // play invalid input
+                        $agi->stream_file('pm-invalid-option', 4500);
+                    }
                 }
+
+
+                break;
+            } elseif ($childAgeRange['result'] == 2) {
+
+                // key message if pressed 1
+                $agi->stream_file('ngo_ivr/pok/poe_key_message_pressed_2', 32499);
+
+                for ($i = 1; $i <= 3; $i++) {
+
+                    // quiz if press 2
+                    $quizPress1Result = $agi->get_data('ngo_ivr/pok/poe_quiz_press_2_result', 53000, 1);
+
+                    if ($quizPress1Result['result'] == 1) {
+                        // correct anaswer for press 1
+                        $agi->stream_file('ngo_ivr/pok/poe_quiz_press_2_correct', 13414);
+                        $q2_answer = 1;
+                        break;
+                    } elseif ($quizPress1Result['result'] == 2) {
+                        // incorrect answer for press 1
+                        $agi->stream_file('ngo_ivr/pok/poe_quiz_press_2_incorrect', 14581);
+                        $q2_answer = 2;
+                        break;
+                    } else {
+                        // play invalid input
+                        $agi->stream_file('pm-invalid-option', 4500);
+                    }
+                }
+
+                break;
+            } else {
+                // play invalid input
+                $agi->stream_file('pm-invalid-option', 4500);
             }
-
-
-            break;
-            // if ($childAgeRange['result'] == 1) {
-            // } else {
-
-            //     // play invalid input
-            //     $agi->stream_file('pm-invalid-option', 4500);
-            // }
         }
 
         if ($q1_answer != null) {
@@ -182,48 +245,78 @@ for ($i = 1; $i <= 3; $i++) {
 
 
         // outro
-        $agi->stream_file('ngo_ivr/pok/poe_outro', 24000);
+        $agi->stream_file('ngo_ivr/pok/poe_outtro', 24358);
         // break loop
         break;
     } elseif ($chosenLang == 3) {
         for ($i = 1; $i <= 3; $i++) {
 
             // mm intro and ask child age,  child age range (1 for 0-3, 2 for > 3)
-            $agi->get_data('ngo_ivr/skk/sg_intro', 7000, 1);
-            $agi->stream_file('ngo_ivr/skk/sg_key_message', 169000);
+            $childAgeRange = $agi->get_data('ngo_ivr/skk/sk_intro', 20601, 1);
 
-            for ($i = 1; $i <= 3; $i++) {
+            if ($childAgeRange['result'] == 1) {
 
-                // quiz if press 1
-                $quizPress1Result = $agi->get_data('ngo_ivr/skk/sg_quiz', 22000, 1);
+                // key message if pressed 1
+                $agi->stream_file('ngo_ivr/skk/sk_key_message_pressed_1', 376873);
 
-                if ($quizPress1Result['result'] == 1) {
-                    // correct anaswer for press 2
-                    $agi->stream_file('ngo_ivr/skk/sg_correct_answer', 16000);
-                    $q1_answer = 2;
+                for ($i = 1; $i <= 3; $i++) {
 
-                    $conn->close();
-                    break;
-                } elseif ($quizPress1Result['result'] == 2) {
-                    // incorrect answer for press 1
-                    $agi->stream_file('ngo_ivr/skk/sg_incorrect_answer', 18000);
-                    $q1_answer = 1;
+                    // quiz if press 1
+                    $quizPress1Result = $agi->get_data('ngo_ivr/skk/sk_quiz_press_1_result', 29344, 1);
+
+                    if ($quizPress1Result['result'] == 1) {
+                        // correct anaswer for press 1
+                        $agi->stream_file('ngo_ivr/skk/sk_quiz_press_1_incorrect', 15566);
+                        $q1_answer = 1;
+
+                        $conn->close();
+                        break;
+                    } elseif ($quizPress1Result['result'] == 2) {
+                        // incorrect answer for press 1
+                        $agi->stream_file('ngo_ivr/skk/sk_quiz_press_1_correct', 13960);
+                        $q1_answer = 2;
 
 
-                    break;
-                } else {
-                    // play invalid input
-                    $agi->stream_file('pm-invalid-option', 4500);
+                        break;
+                    } else {
+                        // play invalid input
+                        $agi->stream_file('pm-invalid-option', 4500);
+                    }
                 }
+
+
+                break;
+            } elseif ($childAgeRange['result'] == 2) {
+
+                // key message if pressed 1
+                $agi->stream_file('ngo_ivr/skk/sk_key_message_pressed_2', 200216);
+
+                for ($i = 1; $i <= 3; $i++) {
+
+                    // quiz if press 2
+                    $quizPress1Result = $agi->get_data('ngo_ivr/skk/sk_quiz_press_2_result', 39884, 1);
+
+                    if ($quizPress1Result['result'] == 1) {
+                        // correct anaswer for press 1
+                        $agi->stream_file('ngo_ivr/skk/sk_quiz_press_2_correct', 24911);
+                        $q2_answer = 1;
+                        break;
+                    } elseif ($quizPress1Result['result'] == 2) {
+                        // incorrect answer for press 1
+                        $agi->stream_file('ngo_ivr/skk/sk_quiz_press_2_incorrect', 24345);
+                        $q2_answer = 2;
+                        break;
+                    } else {
+                        // play invalid input
+                        $agi->stream_file('pm-invalid-option', 4500);
+                    }
+                }
+
+                break;
+            } else {
+                // play invalid input
+                $agi->stream_file('pm-invalid-option', 4500);
             }
-
-
-            break;
-            // if ($childAgeRange['result'] == 1) {
-            // } else {
-            //     // play invalid input
-            //     $agi->stream_file('pm-invalid-option', 4500);
-            // }
         }
 
         if ($q1_answer != null) {
@@ -245,7 +338,7 @@ for ($i = 1; $i <= 3; $i++) {
 
 
         // outro
-        $agi->stream_file('ngo_ivr/skk/sg_outro', 19000);
+        $agi->stream_file('ngo_ivr/skk/sk_outro', 26116);
 
         // break loop
         break;
@@ -286,94 +379,8 @@ $agi->hangup();
 
 function chooseLangaugeScript($agi)
 {
-    $langResult = $agi->get_data('ngo_ivr/mm/mm_choice', 19500, 1);
+    $langResult = $agi->get_data('ngo_ivr/mm/mm_choice', 18500, 1);
     $chosenLang = $langResult['result'];
     return $chosenLang;
 }
-
- //elseif ($childAgeRange['result'] == 2) {
-
-            //     // key message if pressed 1
-            //     $agi->stream_file('ngo_ivr/mm/mm_key_message_pressed_2', 113000);
-
-            //     for ($i = 1; $i <= 3; $i++) {
-
-            //         // quiz if press 2
-            //         $quizPress1Result = $agi->get_data('ngo_ivr/mm/mm_quiz_press_2_result', 30000, 1);
-
-            //         if ($quizPress1Result['result'] == 1) {
-            //             // correct anaswer for press 1
-            //             $agi->stream_file('ngo_ivr/mm/mm_quiz_press_2_incorrect', 17000);
-            //             $q2_answer = 1;
-            //             break;
-            //         } elseif ($quizPress1Result['result'] == 2) {
-            //             // incorrect answer for press 1
-            //             $agi->stream_file('ngo_ivr/mm/mm_quiz_press_2_correct', 14000);
-            //             $q2_answer = 2;
-            //             break;
-            //         } else {
-            //             // play invalid input
-            //             $agi->stream_file('pm-invalid-option', 4500);
-            //         }
-            //     }
-
-            //     break;
-            // }
- // elseif ($childAgeRange['result'] == 2) {
-
-            //     // key message if pressed 1
-            //     $agi->stream_file('ngo_ivr/pok/poe_key_message_pressed_2', 193000);
-
-            //     for ($i = 1; $i <= 3; $i++) {
-
-            //         // quiz if press 2
-            //         $quizPress1Result = $agi->get_data('ngo_ivr/pok/poe_quiz_press_2_result', 53000, 1);
-
-            //         if ($quizPress1Result['result'] == 1) {
-            //             // correct anaswer for press 1
-            //             $agi->stream_file('ngo_ivr/pok/poe_quiz_press_2_incorrect', 23000);
-            //             $q2_answer = 1;
-            //             break;
-            //         } elseif ($quizPress1Result['result'] == 2) {
-            //             // incorrect answer for press 1
-            //             $agi->stream_file('ngo_ivr/pok/poe_quiz_press_2_correct', 23000);
-            //             $q2_answer = 2;
-            //             break;
-            //         } else {
-            //             // play invalid input
-            //             $agi->stream_file('pm-invalid-option', 4500);
-            //         }
-            //     }
-
-            //     break;
-            // }
-
- // elseif ($childAgeRange['result'] == 2) {
-
-            //     // key message if pressed 1
-            //     $agi->stream_file('ngo_ivr/skk/sk_key_message_pressed_2', 201000);
-
-            //     for ($i = 1; $i <= 3; $i++) {
-
-            //         // quiz if press 2
-            //         $quizPress1Result = $agi->get_data('ngo_ivr/skk/sk_quiz_press_2_result', 58000, 1);
-
-            //         if ($quizPress1Result['result'] == 1) {
-            //             // correct anaswer for press 1
-            //             $agi->stream_file('ngo_ivr/skk/sk_quiz_press_2_incorrect', 29000);
-            //             $q2_answer = 1;
-            //             break;
-            //         } elseif ($quizPress1Result['result'] == 2) {
-            //             // incorrect answer for press 1
-            //             $agi->stream_file('ngo_ivr/skk/sk_quiz_press_2_correct', 16000);
-            //             $q2_answer = 2;
-            //             break;
-            //         } else {
-            //             // play invalid input
-            //             $agi->stream_file('pm-invalid-option', 4500);
-            //         }
-            //     }
-
-            //     break;
-            // }
 
