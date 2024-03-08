@@ -40,7 +40,7 @@ $conn->query($sql);
 
 
 // intro
-$agi->stream_file('ngo_ivr/mm/mm_intro', 5007);
+$agi->stream_file('ngo_ivr/mm/mm_greet', 5007);
 
 $chosenLang = null;
 
